@@ -1,7 +1,3 @@
-export PATH := /home/adam/go/bin:$(PATH) # Need to find an alternative to hard coding the path to my protoc
-
-$(info PATH is $(PATH))
-
 gen:
 	@protoc \
 		--proto_path=protobuf "protobuf/orders.proto" \
