@@ -1,5 +1,7 @@
 package main
 
+import "google.golang.org/grpc"
+
 // Server struct
 type gRPCServer struct {
 	addr string
@@ -12,5 +14,7 @@ func NewGRPCServer(addr string) *gRPCServer {
 
 // Run method to initialise it
 func (s *gRPCServer) Run() error {
+	grpcServer := grpc.NewServer()
 
+	return grpcServer.Serve() // Serve needs a listener
 }
