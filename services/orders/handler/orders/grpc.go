@@ -5,22 +5,44 @@ import (
 
 	"github.com/adammwaniki/kitchen-micro-service/services/common/genproto/orders"
 	"github.com/adammwaniki/kitchen-micro-service/services/orders/types"
+	"google.golang.org/grpc"
 )
 
 type OrdersGrpcHandler struct {
 	// Service injection -- will require an interface
-	ordersService 		types.OrderService
+	ordersService 	types.OrderService
 	// Unimplemented UnimplementedOrderServiceServer  --there is a corresponding OrderServiceServer interface generated in the grpc code
 	// Composing the interface as follows so that it is obtained from the generated code
 	orders.UnimplementedOrderServiceServer // Read on struct and interface composability --different from inheritance
 }
 
-func NewGrpcOrdersService() {
-	gRPCHandler := &OrdersGrpcHandler{}
+func NewGrpcOrdersService(grpc *grpc.Server, ordersService types.OrderService, ) { // needs to receive the service from OrdersGrpcHandler above and the grpc server from services/orders/grpc.go
+	gRPCHandler := &OrdersGrpcHandler{
+		ordersService: ordersService,
+	}
 
 	// Register the OrderServiceServer --the UnimplementedOrderService will allow us to register our order service in this function
+	orders.RegisterOrderServiceServer(grpc, gRPCHandler)
 }
 
 func (h *OrdersGrpcHandler) CreateOrder(ctx context.Context, req *orders.CreateOrderRequest) (*orders.CreateOrderResponse, error) {
-	
+	// We can start implementing and consuming the order service
+	// Dummy data to experiment with
+	order := &orders.Order{
+		OrderID: 42,
+		CustomerID: 2,
+		ProductID: 1,
+		Quantity: 10,
+	}
+
+	err := h.ordersService.CreateOrder(ctx, order) // CreateOrder will need to be implemented on the service
+	if err != nil {
+		return nil, err
+	}
+
+	res := &orders.CreateOrderResponse{
+		Status: "success",
+	}
+
+	return res, nil
 }

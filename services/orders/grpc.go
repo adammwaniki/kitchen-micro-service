@@ -4,6 +4,8 @@ import (
 	"log"
 	"net"
 
+	handler "github.com/adammwaniki/kitchen-micro-service/services/orders/handler/orders"
+	"github.com/adammwaniki/kitchen-micro-service/services/orders/service"
 	"google.golang.org/grpc"
 )
 
@@ -27,6 +29,8 @@ func (s *gRPCServer) Run() error {
 	grpcServer := grpc.NewServer()
 
 	// Register our grpc services
+	orderService := service.NewOrderService()
+	handler.NewGrpcOrdersService(grpcServer, orderService) // We don't need to assign it to an orderHandler variable
 
 	log.Printf("Starting gRPC server on %v", s.addr)
 
