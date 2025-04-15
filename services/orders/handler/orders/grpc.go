@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"context"
+
 	"github.com/adammwaniki/kitchen-micro-service/services/common/genproto/orders"
 	"github.com/adammwaniki/kitchen-micro-service/services/orders/types"
 )
@@ -17,4 +19,8 @@ func NewGrpcOrdersService() {
 	gRPCHandler := &OrdersGrpcHandler{}
 
 	// Register the OrderServiceServer --the UnimplementedOrderService will allow us to register our order service in this function
+}
+
+func (h *OrdersGrpcHandler) CreateOrder(ctx context.Context, req *orders.CreateOrderRequest) (*orders.CreateOrderResponse, error) {
+	
 }
