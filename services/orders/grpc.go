@@ -26,7 +26,7 @@ func (s *gRPCServer) Run() error {
 
 	grpcServer := grpc.NewServer()
 
-	// We will come back here to register our grpc services
+	// Register our grpc services
 
 	log.Printf("Starting gRPC server on %v", s.addr)
 
