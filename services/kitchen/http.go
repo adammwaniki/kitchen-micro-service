@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/adammwaniki/kitchen-micro-service/services/common/genproto/orders"
 )
 
 // The Kitchen will connect to the orders via grpc while the end clients will interact with the browser via http (the orders are received by the browser in http)
@@ -22,6 +26,23 @@ func (s *httpServer) Run() error {
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// We will create a grpc connection to our orders
+		// Typically the functions here would be kept in a service directory under the kitchen directory similar to the orders for separation of concerns
+		// However, for educational purposes we will write it all here
+
+		// pass the connection to the client of the order service. This will be gotten from the generated code
+		c := orders.NewOrderServiceClient(conn)
+
+		ctx, cancel := context.WithTimeout(r.Context(), time.Second*2)
+		defer cancel()
+
+		_, err := c.CreateOrder(ctx, &orders.CreateOrderRequest{ // This is similar to a POST request to the api but the difference is that grpc allows us to just call it like a function (a remote procedure call)
+			CustomerID: 24,
+			ProductID: 3123,
+			Quantity: 2,
+		})
+		if err != nil {
+			log.Fatalf("client error: %v", err)
+		}
 	})
 
 	log.Println("Starting server on", s.addr)
