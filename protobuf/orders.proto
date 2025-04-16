@@ -4,7 +4,7 @@ option go_package = "github.com/adammwaniki/kitchen-micro-service/common/orders"
 
 service OrderService {
     rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse) {};
-    rpc GetOrder(GetOrdersRequest) returns (GetOrderResponse) {};
+    rpc GetOrders(GetOrdersRequest) returns (GetOrderResponse) {};
 }
 
 message Order { // This is what will be shown on the kitchen screen

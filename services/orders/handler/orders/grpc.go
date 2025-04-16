@@ -25,6 +25,16 @@ func NewGrpcOrdersService(grpc *grpc.Server, ordersService types.OrderService, )
 	orders.RegisterOrderServiceServer(grpc, gRPCHandler)
 }
 
+// The new GetOrders grpc method implementation
+func (h *OrdersGrpcHandler) GetOrders(ctx context.Context, req *orders.GetOrdersRequest) (*orders.GetOrderResponse, error) {
+	o := h.ordersService.GetOrders(ctx) // not calling it orders to prevent naming conflict with the orders package
+	res := &orders.GetOrderResponse{
+		Orders: o,
+	}
+
+	return res, nil
+}
+
 func (h *OrdersGrpcHandler) CreateOrder(ctx context.Context, req *orders.CreateOrderRequest) (*orders.CreateOrderResponse, error) {
 	// We can start implementing and consuming the order service
 	// Dummy data to experiment with
